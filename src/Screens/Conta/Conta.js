@@ -25,7 +25,7 @@ export default class Sobre extends Component{
       }
     
     logOut = async () => {
-        auth().signOut();
+        //auth().signOut();
         this.props.navigation.navigate('LoginScreen');
     }
 
@@ -34,10 +34,11 @@ export default class Sobre extends Component{
         auth().onAuthStateChanged(function(user) {
             auth().sendPasswordResetEmail(user.email).ContinueWith(task => {
                 if (task.IsCanceled) {
-                  Alert.alert("SendPasswordResetEmailAsync was canceled.");
+                  //Alert.alert("SendPasswordResetEmailAsync was canceled.");
+                  
                 }
                 else if (task.IsFaulted) {
-                  Alert.alert("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+                  //Alert.alert("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
                 }
                 else{
                     this.setState({email:"Verifique seu e-mail para redefinir sua senha."});

@@ -37,6 +37,8 @@ export default class Login extends Component {
       });
     }
 
+    console.disableYellowBox = true; //-> disabilita warnings amarelos na tela
+    console.reportErrorsAsExceptions = false; //-> disbilita erros na tela
     
     }
 
@@ -49,8 +51,6 @@ export default class Login extends Component {
   //Sistema de login
   login = async () => {
     const { email, password } = this.state;
-
-    console.disableYellowBox = true; //-> disabilita warnings amarelos na tela
 
     if(email != "" && password != ""){
       try {
@@ -119,6 +119,12 @@ export default class Login extends Component {
             this.props.navigation.navigate('CadastrarScreen');
           }}>
             <Text style={{color:'#fff', fontSize:15, marginTop:8}}>Não possui conta? Crie uma aqui</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.navigate('RedefinirSenhaScreen');
+          }}>
+            <Text style={{color:'#fff', fontSize:15, marginTop:8}}>Esqueceu sua senha? Redefine-a aqui</Text>
           </TouchableOpacity>
         </View>
 

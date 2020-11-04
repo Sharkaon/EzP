@@ -13,7 +13,7 @@ import {
     Alert
 } from 'react-native';
 
-import auth from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
 
 /**
  * TELA DE LOGIN
@@ -21,38 +21,35 @@ import auth from '@react-native-firebase/auth';
 export default class RedefinirSenha extends Component {  
 
     state={
-        password: ''
+        email: '',
+        message: ''
     }
 
-    update = async() => {
-        const password = this.state;
-
-        if(password != ""){
-
-            auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    user.UpdatePasswordAsync(password).ContinueWith(task => {
-                        if (task.IsCanceled) {
-                          Debug.LogError("UpdatePasswordAsync was canceled.");
-                          return;
-                        }
-                        if (task.IsFaulted) {
-                          Debug.LogError("UpdatePasswordAsync encountered an error: " + task.Exception);
-                          return;
-                        }
-                    
-                        Debug.Log("Password updated successfully.");
-                      });
-                } else {
-                    //Alert.alert("deslogado");   
-                }
-            });
+    static navigationOptions = ({ navigation }) => {
+        return{
+          //faz com que a tela não apareça na gaveta do menu hamburguer
+          drawerLabel: () => null,
+          //faz com que não possa abrir o menu hamburger nessa página
+          drawerLockMode: 'locked-closed'
         }
+    }
 
+    redefine = async () => {
+        const {email} = this.state;
+        if(email != ""){
+            //Alert.alert(email)
+                firebase.auth().sendPasswordResetEmail(email)
+                .then(function() {
+                    this.setState({message: 'Verifique seu e-mail.'});
+                  })
+                  .catch(function(error) {
+                    this.setState({message: 'Ocorreu um erro.'});
+                  });
+                  this.setState({message: 'Verifique seu e-mail.'});
+        }
         else{
-            this.setState({error: "Campo Vazio!"});
+            this.setState({message: 'Campo vazio!'});
         }
-
     }
 
     render(){
@@ -65,15 +62,16 @@ export default class RedefinirSenha extends Component {
                 <View style={{ flex: 1, justifyContent: 'center', margin: 10, alignItems: 'center' }}>
                     <TextInput
                         style={{ fontSize: 20, backgroundColor: '#fff', width: 300 }}
-                        placeholder="Insira sua nova senha"
-                        value={this.state.password}
-                        onChangeText={password => this.setState({ password })}
+                        placeholder="Insira seu e-mail"
+                        value={this.state.email}
+                        onChangeText={(email) => this.setState({ email })}
                     />
                     <TouchableOpacity
                     style={styles.botaoLogin}
-                    onPress={this.update}>
+                    onPress={this.redefine}>
                         <Text style={{ color: '#fff', fontSize: 30 }}>Salvar</Text>
                     </TouchableOpacity>
+                    <Text style={{color:'#fff', fontSize:15, marginTop:15, marginBottom:2}}>{this.state.message}</Text>
                    
                 </View>
             </View>  

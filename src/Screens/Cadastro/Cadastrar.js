@@ -33,13 +33,16 @@ export default class Cadastrar extends Component {
     
     if(email != "" && password != ""){
       try {
-        /*auth().createUserWithEmailAndPassword(email, password).then(()=>{
-          console.log("Criado")
-          this.props.navigation.navigate('MenuScreen')
-        })*/
         const user = await auth().createUserWithEmailAndPassword(email, password);
         this.props.navigation.navigate('MenuScreen');
         this.setState({error: false, password: '', email: ''});
+        auth().onAuthStateChanged(function(user) {
+          user.sendEmailVerification().then(function() {
+            //email enviado
+          }).catch(function(error) {
+            //Alert.alert(error);
+          });
+        });
       }
       catch(err){
         //Alert.alert(err.message);
@@ -52,10 +55,6 @@ export default class Cadastrar extends Component {
 
     
   }
-
-  /*onAuthStateChanged(user) {
-    setUser(user);
-  }*/
 
   static navigationOptions = ({ navigation }) => {
     return{
